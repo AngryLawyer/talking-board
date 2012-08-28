@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<mx:Image xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    source="@Embed(source='/assets/planchette.png')" buttonMode="true"
+    useHandCursor="true" mouseDown="onMouseDown(event)" mouseMove="onMouseMove(event)" rollOut="onMouseOut(event)"
+    mouseUp="onMouseUp(event)" mouseOut="onMouseOut(event)" creationComplete="onCreated(event)"
+    >
+    <fx:Script>
+        <![CDATA[
+            import mx.collections.ArrayCollection;
+            import mx.controls.Alert;
+            import mx.utils.ObjectUtil;
+            import flash.utils.Timer;
+            import flash.events.TimerEvent
+            import flash.filters.DropShadowFilter;
+
+            import com.angrylawyer.talkingboard.vo.Glyph;
+            import com.angrylawyer.talkingboard.helpers.SentenceBuilder;
+            import com.angrylawyer.talkingboard.helpers.PersonalityManager;
+            import com.angrylawyer.talkingboard.helpers.BasePersonality;
+
+            private var lastMousePosition:Point = null;
+            private var relativeGripPoint:Point = null;
+            private var possessionTimer:Timer = null;
+            
+            private var glyphs:ArrayCollection = new ArrayCollection([]); 
+            private var possessed:Boolean = false;
+
+            private const offset:Point = new Point(70, 72);
+            private const minimumPossessionDelay:int = 0;
+            private const randomPossessionDelay:int = 15;
+
+            private var currentPersonality:BasePersonality = null;
+            
+            private function onCreated(event : Event):void
+            {
+                var shadow:DropShadowFilter = new DropShadowFilter();
+                shadow.distance = 5;
+                shadow.angle = 25;
+                this.filters = [shadow];
+            }
+
+            public function initializePosition(width:int, height:int):void
+            {
+                this.x = (width/2)-(offset.x);
+                this.y = (height/2)-(offset.y);
+            }
+
+            private function onMouseDown(event : MouseEvent):void
+            {
+                lastMousePosition = new Point(event.stageX, event.stageY);
+                relativeGripPoint = new Point(event.localX, event.localY);
+                //Kill the old one
+                if (possessionTimer != null)
+                {
+                    clearPosessionTimer();
+                }
+                possessionTimer = new Timer(1000 * (minimumPossessionDelay + Math.floor(Math.random() * randomPossessionDelay)), 1);
+                possessionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, startPossession, false, 0, true);
+                possessionTimer.start();
+
+                //initiateMovement(SentenceBuilder.generateSentence(";:. 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+            }
+
+            private function onMouseMove(event : MouseEvent):void
+            {
+                if (possessionTimer != null)
+                {
+                    possessionTimer.reset();
+                    possessionTimer.start();
+                }
+                if (lastMousePosition != null)
+                {
+                    if (!possessed)
+                    {
+                        this.x = event.stageX - relativeGripPoint.x;
+                        this.y = event.stageY - relativeGripPoint.y;
+                    }
+                    lastMousePosition = new Point(event.stageX, event.stageY); 
+                }
+            }
+
+            public function initiateMovement(letterList:ArrayCollection):void
+            {
+               glyphs = letterList;
+               nextMove();
+            }
+
+            private function nextMove():void
+            {
+                if (possessed == false)
+                    return;
+
+                var initialPause:Boolean= false;
+
+                if (glyphs.length == 0)
+                {
+                    initialPause = true;
+                    if (currentPersonality.hasMoreWords())
+                    {
+                        glyphs = currentPersonality.getNextWord();
+                    }
+                    else
+                    {
+                        currentPersonality = PersonalityManager.getPersonality();
+                        glyphs = currentPersonality.getNextWord();
+                    }
+                }
+
+                var nextGlyph:Glyph = glyphs.removeItemAt(0) as Glyph;
+                mover.stop();
+                mover.duration = calculateDistance(this.x - offset.x, this.y - offset.y, nextGlyph.position.x - offset.x, nextGlyph.position.y - offset.y) / currentPersonality.getSpeed();
+                mover.xTo = nextGlyph.position.x - offset.x;
+                mover.yTo = nextGlyph.position.y - offset.y;
+
+                if (!initialPause)
+                {
+                    mover.startDelay = currentPersonality.getPauseLength();
+                }
+                else
+                {
+                    mover.startDelay = currentPersonality.getPauseLength() * 2;
+                }
+                
+                mover.play();
+            }
+            
+            private function onMouseUp(event : MouseEvent):void
+            {
+                controlLost();
+            }
+
+            private function onMouseOut(event : MouseEvent):void
+            {
+                controlLost();
+            }
+
+            private function controlLost():void
+            {
+                if (possessionTimer != null)
+                {
+                    clearPosessionTimer();
+                }
+                stopPossession();
+                lastMousePosition = null;
+                relativeGripPoint = null;
+            }
+
+            private function resetPossessionTimer():void
+            {
+                possessionTimer.reset();
+            }
+
+            private function clearPosessionTimer():void
+            {
+                possessionTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, startPossession);
+                possessionTimer.stop();
+                possessionTimer = null;
+            }
+
+            private function startPossession(event : TimerEvent):void
+            {
+                stopPossession();
+                if (possessionTimer != null)
+                {
+                    clearPosessionTimer();
+                }
+                //Pick a personality..
+
+                if (!currentPersonality || currentPersonality.hasMoreWords() == false)
+                {
+                    currentPersonality = PersonalityManager.getPersonality();
+                }
+                //Pick a sentence
+                //Start the magic
+                possessed = true;
+                initiateMovement(currentPersonality.getNextWord());
+            }
+
+            private function stopPossession():void
+            {
+                possessed = false;
+                glyphs.removeAll();
+                mover.stop();
+            }
+
+            private function calculateDistance(x1:Number, y1:Number, x2:Number, y2:Number):Number
+            {
+                return Math.sqrt(Math.abs((x2-x1)*(x2-x1)) + Math.abs((y2-y1)*(y2-y1)));
+            }
+        ]]>
+        
+    </fx:Script>
+    <fx:Declarations>
+        <s:Move id="mover" target="{this}" xTo="800" yTo="600" duration="5000" effectEnd="{nextMove()}"/>
+    </fx:Declarations>
+</mx:Image>
