@@ -3,4 +3,4 @@
 if [ ! -d "bin" ]; then
     mkdir bin
 fi
-mxmlc src/main.as -l "libs" -static-link-runtime-shared-libraries -debug=true -o bin/main.swf
+mxmlc src/main.as -static-link-runtime-shared-libraries=true -library-path+="libs/greensock.swc" -debug=true -o bin/main.swf
