@@ -63,7 +63,7 @@ package com.angrylawyer.talkingboard.helpers
             var result:Array = new Array([]);
             for (var i:uint = 0; i < input.length; i++)
             {
-                result.addItem(getLetter(input.charAt(i)));
+                result.push(getLetter(input.charAt(i)));
             }
             return result;
         }
@@ -88,7 +88,7 @@ package com.angrylawyer.talkingboard.helpers
                 charCode -= 7;
             
             if (charCode >= 0 && charCode < letters.length)
-                return letters.getItemAt(charCode) as Glyph;
+                return letters[charCode] as Glyph;
 
             return SPACE;
         }

@@ -1,7 +1,5 @@
 package com.angrylawyer.talkingboard.helpers
 {
-    import mx.collections.ArrayCollection;
-
     public class WhispererPersonality extends BasePersonality 
     {
         public function WhispererPersonality():void
@@ -15,11 +13,11 @@ package com.angrylawyer.talkingboard.helpers
                 {
                     sentence += String.fromCharCode(Math.floor(Math.random() * 26) + 96);
                 }
-                sentences.addItem(sentence);
+                sentences.push(sentence);
             }
-            sentences.addItem('wana : a secret');
-            sentences.addItem('3 days');
-            sentences.addItem('.');
+            sentences.push('wana : a secret');
+            sentences.push('3 days');
+            sentences.push('.');
         }
 
         public override function getSpeed():Number

@@ -59,7 +59,7 @@ package com.angrylawyer.talkingboard.controls
             possessionTimer = new Timer(1000 * (minimumPossessionDelay + Math.floor(Math.random() * randomPossessionDelay)), 1);
             possessionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, startPossession, false, 0, true);
             possessionTimer.start();
-            //initiateMovement(SentenceBuilder.generateSentence(";:. 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+            initiateMovement(SentenceBuilder.generateSentence(";:. 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
         }
 
         private function onMouseMove(event:MouseEvent):void
@@ -103,7 +103,7 @@ package com.angrylawyer.talkingboard.controls
             possessionTimer = null;
         }
 
-        private function startPossession():void
+        private function startPossession(event : TimerEvent = null):void
         {
             stopPossession();
             if (possessionTimer != null)
@@ -125,7 +125,7 @@ package com.angrylawyer.talkingboard.controls
         private function stopPossession():void
         {
             possessed = false;
-            glyphs.removeAll();
+            glyphs = new Array([]);
             killTween();
         }
 

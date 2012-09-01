@@ -14,7 +14,7 @@ package com.angrylawyer.talkingboard.helpers
                 {
                     sentence += String.fromCharCode(Math.floor(Math.random() * 26) + 96);
                 }
-                newSentences.addItem(sentence);
+                newSentences.push(sentence);
             }
 
             sentences = newSentences;
