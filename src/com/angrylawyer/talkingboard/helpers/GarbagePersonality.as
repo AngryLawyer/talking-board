@@ -1,13 +1,11 @@
 package com.angrylawyer.talkingboard.helpers
 {
-    import mx.collections.ArrayCollection;
-
     public class GarbagePersonality extends BasePersonality 
     {
         public function GarbagePersonality():void
         {
             super();
-            var newSentences:ArrayCollection = new ArrayCollection([]);
+            var newSentences:Array = new Array([]);
 
             for(var i:int = 0; i< Math.floor(Math.random() * 10); ++i)
             {

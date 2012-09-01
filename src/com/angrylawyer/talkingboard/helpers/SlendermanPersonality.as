@@ -1,13 +1,11 @@
 package com.angrylawyer.talkingboard.helpers
 {
-    import mx.collections.ArrayCollection;
-
     public class SlendermanPersonality extends BasePersonality 
     {
         public function SlendermanPersonality():void
         {
             super();
-            sentences = new ArrayCollection([
+            sentences = new Array([
                 'iamoutsideletmein',
                 'lookatwindow',
                 'slenderman',

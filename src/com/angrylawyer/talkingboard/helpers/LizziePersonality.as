@@ -1,13 +1,11 @@
 package com.angrylawyer.talkingboard.helpers
 {
-    import mx.collections.ArrayCollection;
-
     public class LizziePersonality extends BasePersonality 
     {
         public function LizziePersonality():void
         {
             super();
-            sentences = new ArrayCollection([
+            sentences = new Array([
                 'lizzie borden took an axe',
                 'and gave her father 40 whacks',
                 'and when she saw whay she had done',

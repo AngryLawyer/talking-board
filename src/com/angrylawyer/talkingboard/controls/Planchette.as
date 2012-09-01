@@ -46,24 +46,144 @@ package com.angrylawyer.talkingboard.controls
 
         private function onMouseDown(event:MouseEvent):void
         {
+            lastMousePosition = new Point(event.stageX, event.stageY);
+            relativeGripPoint = new Point(event.localX, event.localY);
+            //Kill the old timer
+            if (possessionTimer != null)
+            {
+                clearPosessionTimer();
+            }
+            possessionTimer = new Timer(1000 * (minimumPossessionDelay + Math.floor(Math.random() * randomPossessionDelay)), 1);
+            possessionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, startPossession, false, 0, true);
+            possessionTimer.start();
         }
 
         private function onMouseMove(event:MouseEvent):void
         {
+            if (possessionTimer != null)
+            {
+                possessionTimer.reset();
+                possessionTimer.start();
+            }
+            if (lastMousePosition != null)
+            {
+                if (!possessed)
+                {
+                    this.x = event.stageX - relativeGripPoint.x;
+                    this.y = event.stageY - relativeGripPoint.y;
+                }
+                lastMousePosition = new Point(event.stageX, event.stageY); 
+            }
         }
 
         private function onMouseOut(event:MouseEvent):void
         {
             Mouse.cursor=MouseCursor.AUTO;
+            controlLost();
         }
 
         private function onMouseUp(event:MouseEvent):void
         {
+            controlLost();
         }
 
         private function onMouseOver(event:MouseEvent):void
         {
-            Mouse.cursor=MouseCursor.HAND;
+            Mouse.cursor=MouseCursor.BUTTON;
+        }
+
+        private function clearPosessionTimer():void
+        {
+            possessionTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, startPossession);
+            possessionTimer.stop();
+            possessionTimer = null;
+        }
+
+        private function startPossession():void
+        {
+            stopPossession();
+            if (possessionTimer != null)
+            {
+                clearPosessionTimer();
+            }
+            //Pick a personality..
+
+            if (!currentPersonality || currentPersonality.hasMoreWords() == false)
+            {
+                currentPersonality = PersonalityManager.getPersonality();
+            }
+            //Pick a sentence
+            //Start the magic
+            possessed = true;
+            initiateMovement(currentPersonality.getNextWord());
+        }
+
+        private function stopPossession():void
+        {
+            possessed = false;
+            glyphs.removeAll();
+            //mover.stop();
+        }
+
+        private function controlLost():void
+        {
+            if (possessionTimer != null)
+            {
+                clearPosessionTimer();
+            }
+            stopPossession();
+            lastMousePosition = null;
+            relativeGripPoint = null;
+        }
+
+        public function initiateMovement(letterList:Array):void
+        {
+           glyphs = letterList;
+           nextMove();
+        }
+
+        private function nextMove():void
+        {
+            if (possessed == false)
+                return;
+
+            var initialPause:Boolean= false;
+
+            if (glyphs.length == 0)
+            {
+                initialPause = true;
+                if (currentPersonality.hasMoreWords())
+                {
+                    glyphs = currentPersonality.getNextWord();
+                }
+                else
+                {
+                    currentPersonality = PersonalityManager.getPersonality();
+                    glyphs = currentPersonality.getNextWord();
+                }
+            }
+
+            var nextGlyph:Glyph = glyphs.removeItemAt(0) as Glyph;
+            //mover.stop();
+            //mover.duration = calculateDistance(this.x - offset.x, this.y - offset.y, nextGlyph.position.x - offset.x, nextGlyph.position.y - offset.y) / currentPersonality.getSpeed();
+            //mover.xTo = nextGlyph.position.x - offset.x;
+            //mover.yTo = nextGlyph.position.y - offset.y;
+
+            if (!initialPause)
+            {
+                //mover.startDelay = currentPersonality.getPauseLength();
+            }
+            else
+            {
+                //mover.startDelay = currentPersonality.getPauseLength() * 2;
+            }
+            
+            //mover.play();
+        }
+
+        private function calculateDistance(x1:Number, y1:Number, x2:Number, y2:Number):Number
+        {
+            return Math.sqrt(Math.abs((x2-x1)*(x2-x1)) + Math.abs((y2-y1)*(y2-y1)));
         }
 
         private function applyShadow():void

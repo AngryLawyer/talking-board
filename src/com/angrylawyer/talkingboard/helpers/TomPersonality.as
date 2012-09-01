@@ -1,13 +1,11 @@
 package com.angrylawyer.talkingboard.helpers
 {
-    import mx.collections.ArrayCollection;
-
     public class TomPersonality extends BasePersonality 
     {
         public function TomPersonality():void
         {
             super();
-            sentences = new ArrayCollection([
+            sentences = new Array([
                 'hi',
                 'my name is tom',
                 'how are you',
