@@ -127,13 +127,13 @@ package com.angrylawyer.talkingboard.controls
 
         private function controlLost():void
         {
+            lastMousePosition = null;
+            relativeGripPoint = null;
             if (possessionTimer != null)
             {
                 clearPosessionTimer();
             }
             stopPossession();
-            lastMousePosition = null;
-            relativeGripPoint = null;
         }
 
         public function initiateMovement(letterList:Array):void
