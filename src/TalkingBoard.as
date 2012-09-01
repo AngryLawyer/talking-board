@@ -8,13 +8,14 @@ package
     import com.angrylawyer.talkingboard.helpers.Assets;
     import com.angrylawyer.talkingboard.controls.Planchette;
 
-    public class main extends Sprite  //Rename to something more sensible
+    public class TalkingBoard extends Sprite
     {
         private const STAGE_WIDTH:uint = 800;
         private const STAGE_HEIGHT:uint = 520;
 
-        public function main():void
+        public function TalkingBoard():void
         {
+            trace('STARTING');
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.align = StageAlign.TOP_LEFT;
 

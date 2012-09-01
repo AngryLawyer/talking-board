@@ -27,7 +27,7 @@ package com.angrylawyer.talkingboard.helpers
 
         public override function getPauseLength():int
         {
-            return 1000;
+            return 10;
         }
     } 
 }

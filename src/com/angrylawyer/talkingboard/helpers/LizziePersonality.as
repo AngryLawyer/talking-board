@@ -5,12 +5,12 @@ package com.angrylawyer.talkingboard.helpers
         public function LizziePersonality():void
         {
             super();
-            sentences = new Array([
+            sentences = new <String>[
                 'lizzie borden took an axe',
                 'and gave her father 40 whacks',
                 'and when she saw whay she had done',
                 'she gave her mother 41'
-            ]);
+            ];
         }
 
         public override function getSpeed():Number
@@ -20,7 +20,7 @@ package com.angrylawyer.talkingboard.helpers
 
         public override function getPauseLength():int
         {
-            return 100;
+            return 3;
         }
     } 
 }

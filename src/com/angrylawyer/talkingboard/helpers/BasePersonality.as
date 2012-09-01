@@ -1,8 +1,10 @@
 package com.angrylawyer.talkingboard.helpers
 {
+    import com.angrylawyer.talkingboard.vo.Glyph;
+
     public class BasePersonality 
     {
-        protected var sentences:Array = new Array([]);
+        protected var sentences:Vector.<String>= new Vector.<String>();
 
         public function getSpeed():Number
         {
@@ -19,15 +21,15 @@ package com.angrylawyer.talkingboard.helpers
             return (sentences.length > 0);
         }
 
-        public function getNextWord():Array
+        public function getNextWord():Vector.<Glyph>
         {
             if (hasMoreWords())
             {
-                return SentenceBuilder.generateSentence(String(sentences.removeItemAt(0).toUpperCase()));
+                return SentenceBuilder.generateSentence(String(sentences.shift().toUpperCase()));
             }
             else
             {
-                return new Array([]);
+                return new Vector.<Glyph>();
             }
         }
     } 

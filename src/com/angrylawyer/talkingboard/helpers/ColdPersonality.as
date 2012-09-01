@@ -5,10 +5,10 @@ package com.angrylawyer.talkingboard.helpers
         public function ColdPersonality():void
         {
             super();
-            sentences = new Array([
+            sentences = new <String>[
                 'itscoldouthere',
                 'coldcoldcoldcoldcold'
-            ]);
+            ];
         }
 
         public override function getSpeed():Number
@@ -18,7 +18,7 @@ package com.angrylawyer.talkingboard.helpers
 
         public override function getPauseLength():int
         {
-            return 200;
+            return 5;
         }
     } 
 }

@@ -21,13 +21,13 @@ package com.angrylawyer.talkingboard.controls
     {
         private const offset:Point = new Point(70, 72);
         private const minimumPossessionDelay:int = 0;
-        private const randomPossessionDelay:int = 15;
+        private const randomPossessionDelay:int = 30;
 
         private var lastMousePosition:Point = null;
         private var relativeGripPoint:Point = null;
         private var possessionTimer:Timer = null;
                 
-        private var glyphs:Array = new Array([]); //TODO: Consider Vector
+        private var glyphs:Vector.<Glyph> = new Vector.<Glyph>(); //TODO: Consider Vector
         private var possessed:Boolean = false;
         private var currentPersonality:BasePersonality = null;
 
@@ -59,7 +59,6 @@ package com.angrylawyer.talkingboard.controls
             possessionTimer = new Timer(1000 * (minimumPossessionDelay + Math.floor(Math.random() * randomPossessionDelay)), 1);
             possessionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, startPossession, false, 0, true);
             possessionTimer.start();
-            initiateMovement(SentenceBuilder.generateSentence(";:. 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
         }
 
         private function onMouseMove(event:MouseEvent):void
@@ -125,7 +124,7 @@ package com.angrylawyer.talkingboard.controls
         private function stopPossession():void
         {
             possessed = false;
-            glyphs = new Array([]);
+            glyphs = new Vector.<Glyph>();
             killTween();
         }
 
@@ -140,10 +139,10 @@ package com.angrylawyer.talkingboard.controls
             stopPossession();
         }
 
-        public function initiateMovement(letterList:Array):void
+        public function initiateMovement(letterList:Vector.<Glyph>):void
         {
-           glyphs = letterList;
-           nextMove();
+            glyphs = letterList;
+            nextMove();
         }
 
         private function nextMove():void
@@ -167,7 +166,8 @@ package com.angrylawyer.talkingboard.controls
                 }
             }
 
-            var nextGlyph:Glyph = glyphs.removeItemAt(0) as Glyph;
+            var nextGlyph:Glyph = glyphs.shift();
+
             killTween();
 
             var distance:Number = calculateDistance(this.x - offset.x, 
@@ -175,7 +175,8 @@ package com.angrylawyer.talkingboard.controls
                                                     nextGlyph.position.x - offset.x,
                                                     nextGlyph.position.y - offset.y);
 
-            var duration:Number = distance / currentPersonality.getSpeed();
+            var duration:Number = distance * currentPersonality.getSpeed();
+            trace(duration);
 
             mover = new TweenLite(this, duration, {
                 x: nextGlyph.position.x - offset.x,

@@ -50,17 +50,17 @@ package com.angrylawyer.talkingboard.helpers
         public static const ZERO:Glyph = new Glyph("0", new Point(610, 395));
 
         public static const SPACE:Glyph = new Glyph(" ", new Point(400, 260));
-        public static const letters:Array = new Array([ZERO,ONE,TWO,THREE,FOUR,
+        public static const letters:Array = new Array(ZERO,ONE,TWO,THREE,FOUR,
             FIVE,SIX,SEVEN,EIGHT,NINE,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,
-            U,V,W,X,Y,Z]);
+            U,V,W,X,Y,Z);
 
         public function SentenceBuilder()
         {
         }
 
-        public static function generateSentence(input : String):Array
+        public static function generateSentence(input : String):Vector.<Glyph>
         {
-            var result:Array = new Array([]);
+            var result:Vector.<Glyph> = new Vector.<Glyph>();
             for (var i:uint = 0; i < input.length; i++)
             {
                 result.push(getLetter(input.charAt(i)));

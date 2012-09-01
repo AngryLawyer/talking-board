@@ -1,15 +1,11 @@
 package com.angrylawyer.talkingboard.helpers
 {
-    import mx.collections.ArrayCollection;
-
     public class DebugPersonality extends BasePersonality 
     {
         public function DebugPersonality():void
         {
             super();
-            sentences = new ArrayCollection([
-                'abcdefgjijklmnopqrstuvwxyz;:.'
-            ]);
+            sentences = new <String>['abcdefgjijklmnopqrstuvwxyz;:.'];
         }
 
         public override function getSpeed():Number
@@ -19,7 +15,7 @@ package com.angrylawyer.talkingboard.helpers
 
         public override function getPauseLength():int
         {
-            return 10;
+            return 0;
         }
     } 
 }

@@ -5,12 +5,12 @@ package com.angrylawyer.talkingboard.helpers
         public function TomPersonality():void
         {
             super();
-            sentences = new Array([
+            sentences = new <String>[
                 'hi',
                 'my name is tom',
                 'how are you',
                 'i will be here forever now'
-            ]);
+            ];
         }
 
         public override function getSpeed():Number
@@ -20,7 +20,7 @@ package com.angrylawyer.talkingboard.helpers
 
         public override function getPauseLength():int
         {
-            return 2000;
+            return 2;
         }
     } 
 }

@@ -5,7 +5,7 @@ package com.angrylawyer.talkingboard.helpers
         public function GarbagePersonality():void
         {
             super();
-            var newSentences:Array = new Array([]);
+            var newSentences:Vector.<String> = new Vector.<String>();
 
             for(var i:int = 0; i< Math.floor(Math.random() * 10); ++i)
             {

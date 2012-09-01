@@ -5,13 +5,13 @@ package com.angrylawyer.talkingboard.helpers
         public function SlendermanPersonality():void
         {
             super();
-            sentences = new Array([
+            sentences = new <String>[
                 'iamoutsideletmein',
                 'lookatwindow',
                 'slenderman',
                 'slendermanslendermanslenderman',
                 '987654321.'
-            ]);
+            ];
         }
 
         public override function getSpeed():Number
@@ -21,7 +21,7 @@ package com.angrylawyer.talkingboard.helpers
 
         public override function getPauseLength():int
         {
-            return 5000;
+            return 8;
         }
     } 
 }
