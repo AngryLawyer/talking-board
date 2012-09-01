@@ -10,6 +10,7 @@ package com.angrylawyer.talkingboard.controls
     import flash.ui.Mouse;
     import flash.ui.MouseCursor;
 
+    import com.greensock.TweenLite;
     import com.angrylawyer.talkingboard.helpers.Assets;
     import com.angrylawyer.talkingboard.vo.Glyph;
     import com.angrylawyer.talkingboard.helpers.SentenceBuilder;
@@ -29,6 +30,8 @@ package com.angrylawyer.talkingboard.controls
         private var glyphs:Array = new Array([]); //TODO: Consider Vector
         private var possessed:Boolean = false;
         private var currentPersonality:BasePersonality = null;
+
+        private var mover:TweenLite = null;
 
         public function Planchette():void
         {
@@ -56,6 +59,7 @@ package com.angrylawyer.talkingboard.controls
             possessionTimer = new Timer(1000 * (minimumPossessionDelay + Math.floor(Math.random() * randomPossessionDelay)), 1);
             possessionTimer.addEventListener(TimerEvent.TIMER_COMPLETE, startPossession, false, 0, true);
             possessionTimer.start();
+            //initiateMovement(SentenceBuilder.generateSentence(";:. 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
         }
 
         private function onMouseMove(event:MouseEvent):void
@@ -122,7 +126,7 @@ package com.angrylawyer.talkingboard.controls
         {
             possessed = false;
             glyphs.removeAll();
-            //mover.stop();
+            killTween();
         }
 
         private function controlLost():void
@@ -164,21 +168,40 @@ package com.angrylawyer.talkingboard.controls
             }
 
             var nextGlyph:Glyph = glyphs.removeItemAt(0) as Glyph;
-            //mover.stop();
-            //mover.duration = calculateDistance(this.x - offset.x, this.y - offset.y, nextGlyph.position.x - offset.x, nextGlyph.position.y - offset.y) / currentPersonality.getSpeed();
-            //mover.xTo = nextGlyph.position.x - offset.x;
-            //mover.yTo = nextGlyph.position.y - offset.y;
+            killTween();
+
+            var distance:Number = calculateDistance(this.x - offset.x, 
+                                                    this.y - offset.y, 
+                                                    nextGlyph.position.x - offset.x,
+                                                    nextGlyph.position.y - offset.y);
+
+            var duration:Number = distance / currentPersonality.getSpeed();
+
+            mover = new TweenLite(this, duration, {
+                x: nextGlyph.position.x - offset.x,
+                y: nextGlyph.position.y - offset.y,
+                onComplete: nextMove
+            });
 
             if (!initialPause)
             {
-                //mover.startDelay = currentPersonality.getPauseLength();
+                mover.delay = currentPersonality.getPauseLength();
             }
             else
             {
-                //mover.startDelay = currentPersonality.getPauseLength() * 2;
+                mover.delay = currentPersonality.getPauseLength() * 2;
             }
-            
-            //mover.play();
+           
+            mover.play();
+        }
+
+        private function killTween():void
+        {
+            if (mover)
+            {
+                mover.kill();
+                mover = null;
+            }
         }
 
         private function calculateDistance(x1:Number, y1:Number, x2:Number, y2:Number):Number
