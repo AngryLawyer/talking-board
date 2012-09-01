@@ -2,7 +2,6 @@ package com.angrylawyer.talkingboard.helpers
 {
     import com.angrylawyer.talkingboard.Constants;
     import com.angrylawyer.talkingboard.vo.Glyph;
-    import mx.collections.ArrayCollection;
     import flash.geom.Point;
 
     public class SentenceBuilder
@@ -51,49 +50,17 @@ package com.angrylawyer.talkingboard.helpers
         public static const ZERO:Glyph = new Glyph("0", new Point(610, 395));
 
         public static const SPACE:Glyph = new Glyph(" ", new Point(400, 260));
-        public static const letters:ArrayCollection = new ArrayCollection([ZERO,
-                                                                          ONE,
-                                                                          TWO,
-                                                                          THREE,
-                                                                          FOUR,
-                                                                          FIVE,
-                                                                          SIX,
-                                                                          SEVEN,
-                                                                          EIGHT,
-                                                                          NINE,
-                                                                          A,
-                                                                          B,
-                                                                          C,
-                                                                          D,
-                                                                          E,
-                                                                          F,
-                                                                          G,
-                                                                          H,
-                                                                          I,
-                                                                          J,
-                                                                          K,
-                                                                          L,
-                                                                          M,
-                                                                          N,
-                                                                          O,
-                                                                          P,
-                                                                          Q,
-                                                                          R,
-                                                                          S,
-                                                                          T,
-                                                                          U,
-                                                                          V,
-                                                                          W,
-                                                                          X,
-                                                                          Y,
-                                                                          Z]);
+        public static const letters:Array = new Array([ZERO,ONE,TWO,THREE,FOUR,
+            FIVE,SIX,SEVEN,EIGHT,NINE,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,
+            U,V,W,X,Y,Z]);
+
         public function SentenceBuilder()
         {
         }
 
-        public static function generateSentence(input : String):ArrayCollection
+        public static function generateSentence(input : String):Array
         {
-            var result:ArrayCollection = new ArrayCollection([]);
+            var result:Array = new Array([]);
             for (var i:uint = 0; i < input.length; i++)
             {
                 result.addItem(getLetter(input.charAt(i)));
@@ -117,14 +84,13 @@ package com.angrylawyer.talkingboard.helpers
             }
 
             var charCode:int = input.charCodeAt() - 48;
-            if (charCode > 9)
+            if (charCode > 9) //TODO: Work out why I actually did this
                 charCode -= 7;
             
             if (charCode >= 0 && charCode < letters.length)
                 return letters.getItemAt(charCode) as Glyph;
 
             return SPACE;
-
         }
     }
 }

@@ -4,7 +4,7 @@ package com.angrylawyer.talkingboard.helpers
     {
         public static function getPersonality():BasePersonality
         {
-            switch(Math.floor(Math.random() * 8))
+            switch(Math.floor(Math.random() * 6))
             {
                 case 0:
                     return new SlendermanPersonality();

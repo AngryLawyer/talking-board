@@ -1,11 +1,8 @@
 package com.angrylawyer.talkingboard.helpers
 {
-    import mx.collections.ArrayCollection;
-    import mx.controls.Alert;
-
     public class BasePersonality 
     {
-        protected var sentences:ArrayCollection = new ArrayCollection([]);
+        protected var sentences:Array = new Array([]);
 
         public function getSpeed():Number
         {
@@ -22,7 +19,7 @@ package com.angrylawyer.talkingboard.helpers
             return (sentences.length > 0);
         }
 
-        public function getNextWord():ArrayCollection
+        public function getNextWord():Array
         {
             if (hasMoreWords())
             {
@@ -30,7 +27,7 @@ package com.angrylawyer.talkingboard.helpers
             }
             else
             {
-                return new ArrayCollection([]);
+                return new Array([]);
             }
         }
     } 
