@@ -14,12 +14,12 @@ package com.angrylawyer.talkingboard.helpers
             ];
         }
 
-        public override function getSpeed():Number
+        public override function get speed():Number
         {
             return 0.11;
         }
 
-        public override function getPauseLength():int
+        public override function get pauseLength():int
         {
             return 8;
         }

@@ -1,11 +1,15 @@
 package com.angrylawyer.talkingboard.helpers
 {
-    import com.angrylawyer.talkingboard.Constants;
     import com.angrylawyer.talkingboard.vo.Glyph;
     import flash.geom.Point;
 
+    /**
+     * SentenceBuilder converts standard strings into
+     * vectors of Glyphs
+     */
     public class SentenceBuilder
     {
+        //TODO: Migrate these to ratios, so the board isn't a fixed size
         public static const YES:Glyph = new Glyph("YES", new Point(183, 74));
         public static const NO:Glyph = new Glyph("NO", new Point(615, 74));
         public static const GOODBYE:Glyph = new Glyph("GOODBYE", new Point(398, 469));
@@ -54,13 +58,9 @@ package com.angrylawyer.talkingboard.helpers
             FIVE,SIX,SEVEN,EIGHT,NINE,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,
             U,V,W,X,Y,Z);
 
-        public function SentenceBuilder()
-        {
-        }
-
         public static function generateSentence(input : String):Vector.<Glyph>
         {
-            var result:Vector.<Glyph> = new Vector.<Glyph>();
+            const result:Vector.<Glyph> = new Vector.<Glyph>();
             for (var i:uint = 0; i < input.length; i++)
             {
                 result.push(getLetter(input.charAt(i)));
@@ -83,8 +83,9 @@ package com.angrylawyer.talkingboard.helpers
                     break;
             }
 
-            var charCode:int = input.charCodeAt() - 48;
-            if (charCode > 9) //TODO: Work out why I actually did this
+            var charCode:int = input.charCodeAt() - 48; //Rebase the ascii code to have 0 = 0
+
+            if (charCode > 9) //Skip some of the operator symbols
                 charCode -= 7;
             
             if (charCode >= 0 && charCode < letters.length)

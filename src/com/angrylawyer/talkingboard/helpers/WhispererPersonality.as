@@ -20,12 +20,12 @@ package com.angrylawyer.talkingboard.helpers
             sentences.push('.');
         }
 
-        public override function getSpeed():Number
+        public override function get speed():Number
         {
             return 0.02;
         }
 
-        public override function getPauseLength():int
+        public override function get pauseLength():int
         {
             return 10;
         }

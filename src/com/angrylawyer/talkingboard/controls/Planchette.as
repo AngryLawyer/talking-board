@@ -17,6 +17,11 @@ package com.angrylawyer.talkingboard.controls
     import com.angrylawyer.talkingboard.helpers.PersonalityManager;
     import com.angrylawyer.talkingboard.helpers.BasePersonality;
 
+    /**
+     * The planchette is the main actor in this program
+     * If the left mouse is held down long enough over it,
+     * it'll take a life of it's own!
+     */
     public class Planchette extends Sprite
     {
         private const offset:Point = new Point(70, 72);
@@ -27,7 +32,7 @@ package com.angrylawyer.talkingboard.controls
         private var relativeGripPoint:Point = null;
         private var possessionTimer:Timer = null;
                 
-        private var glyphs:Vector.<Glyph> = new Vector.<Glyph>(); //TODO: Consider Vector
+        private var glyphs:Vector.<Glyph> = new Vector.<Glyph>();
         private var possessed:Boolean = false;
         private var currentPersonality:BasePersonality = null;
 
@@ -35,7 +40,7 @@ package com.angrylawyer.talkingboard.controls
 
         public function Planchette():void
         {
-            var graphic:BitmapAsset = new Assets.Planchette();
+            const graphic:BitmapAsset = new Assets.Planchette();
             addChild(graphic);
             applyShadow();
             initializeListeners();
@@ -43,8 +48,8 @@ package com.angrylawyer.talkingboard.controls
 
         public function initializePosition(width:int, height:int):void
         {
-            this.x = (width/2)-(offset.x);
-            this.y = (height/2)-(offset.y);
+            x = (width/2)-(offset.x);
+            y = (height/2)-(offset.y);
         }
 
         private function onMouseDown(event:MouseEvent):void
@@ -72,8 +77,8 @@ package com.angrylawyer.talkingboard.controls
             {
                 if (!possessed)
                 {
-                    this.x = event.stageX - relativeGripPoint.x;
-                    this.y = event.stageY - relativeGripPoint.y;
+                    x = event.stageX - relativeGripPoint.x;
+                    y = event.stageY - relativeGripPoint.y;
                 }
                 lastMousePosition = new Point(event.stageX, event.stageY); 
             }
@@ -81,7 +86,7 @@ package com.angrylawyer.talkingboard.controls
 
         private function onMouseOut(event:MouseEvent):void
         {
-            Mouse.cursor=MouseCursor.AUTO;
+            Mouse.cursor = MouseCursor.AUTO;
             controlLost();
         }
 
@@ -92,7 +97,7 @@ package com.angrylawyer.talkingboard.controls
 
         private function onMouseOver(event:MouseEvent):void
         {
-            Mouse.cursor=MouseCursor.BUTTON;
+            Mouse.cursor = MouseCursor.BUTTON;
         }
 
         private function clearPosessionTimer():void
@@ -109,16 +114,15 @@ package com.angrylawyer.talkingboard.controls
             {
                 clearPosessionTimer();
             }
-            //Pick a personality..
 
-            if (!currentPersonality || currentPersonality.hasMoreWords() == false)
+            if (!currentPersonality || currentPersonality.hasMoreSentences() == false)
             {
                 currentPersonality = PersonalityManager.getPersonality();
             }
-            //Pick a sentence
-            //Start the magic
+
             possessed = true;
-            initiateMovement(currentPersonality.getNextWord());
+
+            initiateMovement(currentPersonality.getNextSentence());
         }
 
         private function stopPossession():void
@@ -150,33 +154,28 @@ package com.angrylawyer.talkingboard.controls
             if (possessed == false)
                 return;
 
-            var initialPause:Boolean= false;
+            var initialPause:Boolean = false;
 
             if (glyphs.length == 0)
             {
                 initialPause = true;
-                if (currentPersonality.hasMoreWords())
-                {
-                    glyphs = currentPersonality.getNextWord();
-                }
-                else
+                if (!currentPersonality.hasMoreSentences())
                 {
                     currentPersonality = PersonalityManager.getPersonality();
-                    glyphs = currentPersonality.getNextWord();
                 }
+                glyphs = currentPersonality.getNextSentence();
             }
 
-            var nextGlyph:Glyph = glyphs.shift();
+            const nextGlyph:Glyph = glyphs.shift();
 
             killTween();
 
-            var distance:Number = calculateDistance(this.x - offset.x, 
-                                                    this.y - offset.y, 
-                                                    nextGlyph.position.x - offset.x,
-                                                    nextGlyph.position.y - offset.y);
+            const distance:Number = calculateDistance(this.x - offset.x, 
+                                                      this.y - offset.y, 
+                                                      nextGlyph.position.x - offset.x,
+                                                      nextGlyph.position.y - offset.y);
 
-            var duration:Number = distance * currentPersonality.getSpeed();
-            trace(duration);
+            const duration:Number = distance * currentPersonality.speed;
 
             mover = new TweenLite(this, duration, {
                 x: nextGlyph.position.x - offset.x,
@@ -184,13 +183,10 @@ package com.angrylawyer.talkingboard.controls
                 onComplete: nextMove
             });
 
-            if (!initialPause)
+            mover.delay = currentPersonality.pauseLength;
+            if (initialPause)
             {
-                mover.delay = currentPersonality.getPauseLength();
-            }
-            else
-            {
-                mover.delay = currentPersonality.getPauseLength() * 2;
+                mover.delay *= 2;
             }
            
             mover.play();
@@ -212,7 +208,7 @@ package com.angrylawyer.talkingboard.controls
 
         private function applyShadow():void
         {
-            var shadow:DropShadowFilter = new DropShadowFilter();
+            const shadow:DropShadowFilter = new DropShadowFilter();
             shadow.distance = 5;
             shadow.angle = 25;
             this.filters = [shadow];
